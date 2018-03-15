@@ -1,0 +1,16 @@
+{
+  "name": "kraftwerk28_bot",
+  "version": "1.0.0",
+  "description": "simple telegram bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "kraftwerk28",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "node-telegram-bot-api": "^0.29.0",
+    "node-webcam": "^0.4.3"
+  }
+}

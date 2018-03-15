@@ -1,0 +1,17 @@
+{
+  "name": "sobko_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "kraftwerk28",
+  "license": "MIT",
+  "dependencies": {
+    "date-events": "^1.0.1",
+    "fs": "0.0.1-security",
+    "node-telegram-bot-api": "^0.30.0"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "cryptobot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kraftwerk28/CryptoBot.git"
+  },
+  "author": "kraftwerk28",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kraftwerk28/CryptoBot/issues"
+  },
+  "homepage": "https://github.com/kraftwerk28/CryptoBot#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "node-telegram-bot-api": "^0.30.0"
+  }
+}
