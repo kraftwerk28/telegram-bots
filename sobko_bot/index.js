@@ -37,7 +37,7 @@ const work = msg => {
         bot.deleteMessage(chats[index].id, chats[index].mId);
     bot.sendMessage(
         msg.chat.id,
-        `<b>Графік роботи Собко І. І.:</b>\n${always}\nГрафік роботи Собко І. І. на сьогодні:\n<code>${now}</code>`,
+        `<b>Графік роботи Собко І. І.:</b>\n${always}\nГрафік роботи Собко І. І. на сьогодні:\n<code>${now}</code>\nТелефони реєстратури: <code>204-85-62</code>, <code>204-95-93</code>`,
         { parse_mode: 'html', reply_to_message_id: msg.message_id }
     ).then(msg => {
         chats[index].mId = msg.message_id;
