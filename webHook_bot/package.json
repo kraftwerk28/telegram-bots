@@ -21,6 +21,7 @@
     "date-events": "^1.0.1",
     "express": "^4.16.2",
     "fs": "0.0.1-security",
+    "google-tts-api": "0.0.2",
     "http": "0.0.0",
     "https": "^1.0.0",
     "jsonarray": "^1.0.3",

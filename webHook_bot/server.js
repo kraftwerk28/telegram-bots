@@ -8,6 +8,7 @@ const JSONArray = require('jsonarray');
 const dateEvents = require('date-events')();
 const bodyParser = require('body-parser');
 const TelegramBot = require('node-telegram-bot-api');
+const googleTTS = require('google-tts-api');
 
 const https_opts = {
   key: fs.readFileSync('/etc/letsencrypt/live/kraftwerk28.pp.ua/privkey.pem'),
@@ -33,6 +34,10 @@ app.post('/' + TOKEN, (req, res) => {
 //#region bot AI
 
 let isRepeating = false;
+
+bot.on('polling_error', (err) => {
+  console.log(err);
+});
 
 // -----MAIN TEXT MESSAGE HANDLER---- // 
 bot.on('text', msg => {
@@ -84,6 +89,17 @@ bot.onText(/\/start_repeating/, msg => {
 bot.onText(/\/stop_repeating/, msg => {
   isRepeating = false;
   bot.sendMessage(msg.chat.id, 'Repeating stopped!');
+});
+
+bot.onText(/\/say/, (msg, match) => {
+  const vals = match.input.split(' ');
+  googleTTS(vals[2], vals[1], 1)   // speed normal = 1 (default), slow = 0.24
+    .then(function (url) {
+      bot.sendVoice(msg.chat.id, url, { reply_to_message_id: msg.message_id });
+    })
+    .catch(function (err) {
+      console.error(err.stack);
+    })
 });
 
 //#region dick game
