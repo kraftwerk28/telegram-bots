@@ -93,7 +93,7 @@ bot.onText(/\/stop_repeating/, msg => {
 
 bot.onText(/\/say/, (msg, match) => {
   const vals = match.input.split(' ');
-  googleTTS(vals[2], vals[1], 1)   // speed normal = 1 (default), slow = 0.24
+  googleTTS(vals.splice(2).join(' '), vals[1], 1)   // speed normal = 1 (default), slow = 0.24
     .then(function (url) {
       bot.sendVoice(msg.chat.id, url, { reply_to_message_id: msg.message_id });
     })
