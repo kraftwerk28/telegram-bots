@@ -1,0 +1,17 @@
+{
+  "name": "jsbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kraftwerk28",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "node-telegram-bot-api": "^0.30.0",
+    "safe-eval": "^0.3.0"
+  }
+}
