@@ -9,8 +9,10 @@ const express = require('express');
 const safeEval = require('safe-eval');
 const chats = {};
 
+let bot;
+
 if (testing) {
-  const bot = new TelegramBot(TOKEN, { polling: true });
+  bot = new TelegramBot(TOKEN, { polling: true });
 } else {
   const https_opts = {
     key: fs.readFileSync('/etc/letsencrypt/live/kraftwerk28.pp.ua/privkey.pem'),
@@ -21,7 +23,7 @@ if (testing) {
   const TOKEN = fs.readFileSync('./token.txt', 'utf8');
   const URL = `https://kraftwerk28.pp.ua:${port}`;
 
-  const bot = new TelegramBot(TOKEN);
+  bot = new TelegramBot(TOKEN);
   bot.setWebHook(`${URL}/${TOKEN}`);
 
   const app = express();
