@@ -49,6 +49,7 @@ bot.on('text', msg => {
     Antimat(msg);
 
   //polling
+  /*
   const text = msg.text;
   const index = polls.findIndex(val => val.chatId === msg.chat.id);
 
@@ -66,6 +67,7 @@ bot.on('text', msg => {
     }
 
   }
+  */
 });
 
 bot.on('new_chat_participant', msg => {
