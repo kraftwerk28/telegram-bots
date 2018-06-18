@@ -473,7 +473,7 @@ const Antimat = msg => {
 let stickerer;
 let stickCnt = 0;
 bot.onText(/\/timur_start(.*) ([0-9]+)/, (msg, match) => {
-  stickCnt = parseInt(match[2] * 1000);
+  stickCnt = parseInt(match[2]);
   if (stickCnt < 100)
     stickerer = setInterval(() => {
       stickCnt--;
