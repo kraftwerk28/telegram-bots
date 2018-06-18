@@ -144,7 +144,7 @@ const playDickGame = (user_id, chat_id, fname, file) => {
     const delta = getRandomLength();
     t[i].dickLength += delta;
     bot.sendMessage(chat_id, fname +
-      delta < 0 ? ', твій песюн скоротився на ' : ', твій песюн виріс на ' +
+      (delta < 0 ? ', твій песюн скоротився на ' : ', твій песюн виріс на ') +
       delta +
       ' см. Тепер його довжина: ' +
       t[i].dickLength);
@@ -172,7 +172,7 @@ bot.onText(/\/dick/, msg => {
     fs.writeFileSync(file, '[]');
   if (!userExists(msg.from.id, file)) {
     addUserToJSON(msg.from.id, msg.from.first_name, file);
-    bot.sendMessage(msg.chat.id, msg.from.first_name + ', вітаємо! Ти зареєструвався у грі "Найдовший песюн"! Кожного дня ти можеш 1 раз в неї зіграти, і таким чином, виростити свого дружка');
+    bot.sendMessage(msg.chat.id, msg.from.first_name + ', ти зареєструвався у грі "Найдовший песюн"!');
   }
 
   playDickGame(msg.from.id, msg.chat.id, msg.from.first_name, file);
