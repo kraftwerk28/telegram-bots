@@ -105,10 +105,11 @@ bot.onText(/\/say/, (msg, match) => {
 //#region dick game
 const userListsDir = 'dickGame/';
 const restricts = [
-  ', ти сьогодні вже грав! От криса, думав мене обдурить!??',
+  ', ти сьогодні вже грав!',
   ', ти грав вже. Чекай і відстань від мене!',
-  ', ти сьогодні грав! От придурок малий!',
-  ', не будь крисаком, мене не обдурити!'
+  ', ти сьогодні грав!',
+  ', мене не обдурити!',
+  ', -_-'
 ];
 const restrictMsg = () => {
   const n = Math.floor(restricts.length * Math.random());
@@ -127,7 +128,7 @@ dateEvents.on('22:00', () => {
   });
 });
 
-const getRandomLength = () => Math.round(Math.random() * 10);
+const getRandomLength = () => Math.round(Math.random() * 20) - 10;
 
 const playDickGame = (user_id, chat_id, fname, file) => {
   const data = fs.readFileSync(file, 'utf8');
@@ -141,7 +142,7 @@ const playDickGame = (user_id, chat_id, fname, file) => {
     const delta = getRandomLength();
     t[i].dickLength += delta;
     bot.sendMessage(chat_id, fname +
-      ', твій песюн виріс на ' +
+      delta < 0 ? ', твій песюн скоротився на ' : ', твій песюн виріс на ' +
       delta +
       ' см. Тепер його довжина: ' +
       t[i].dickLength);
@@ -213,6 +214,7 @@ const askForGirl = () => {
 */
 //#endregion
 
+/*
 //#region polling AI
 const polledUsers = [];
 let shouldBeDeleted = [];
@@ -426,6 +428,7 @@ bot.onText(/\/poll_start/, msg => {
 });
 
 //#endregion
+*/
 
 //#region antimat
 let antimats = new Map();
@@ -439,9 +442,8 @@ const matRectrictions = [
   'не матюкайся',
   'не матерись',
   'матюк на матюку - то матюковий сєкс',
-  'ти дурачок (мат)',
   'ти пєтух матюкливий',
-  ''
+  'мат - ето плоха'
 ];
 
 bot.onText(/\/antimat_on/, msg => { antimats.set(msg.chat.id, true) });
@@ -467,13 +469,25 @@ const Antimat = msg => {
 
 //#region timur
 let stickerer;
+let stickCnt = 0;
 bot.onText(/\/timur_start(.*) ([0-9]+)/, (msg, match) => {
-  stickerer = setInterval(() => {
-    bot.sendSticker(msg.chat.id, 'CAADAgADBwADlNpLF2eKTjCI8ksIAg');
-  }, match[2] * 1000);
+  stickCnt = parseInt(match[2] * 1000);
+  if (stickCnt < 100)
+    stickerer = setInterval(() => {
+      stickCnt--;
+      if (stickCnt > 0) {
+        bot.sendSticker(msg.chat.id, 'CAADAgADBwADlNpLF2eKTjCI8ksIAg');
+      } else {
+        clearInterval(stickerer);
+      }
+    }, 3000);
+  else {
+    bot.sendMessage(msg.chat.id, '...too many @tshemsedinov\'s');
+  }
 });
 bot.onText(/\/timur_stop/, msg => {
   clearInterval(stickerer);
+  stickCnt = 0;
 });
 //#endregion
 
