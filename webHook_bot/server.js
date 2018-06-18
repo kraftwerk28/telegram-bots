@@ -477,7 +477,7 @@ bot.onText(/\/timur_start(.*) ([0-9]+)/, (msg, match) => {
   if (stickCnt < 100)
     stickerer = setInterval(() => {
       stickCnt--;
-      if (stickCnt > 0) {
+      if (stickCnt >= 0) {
         bot.sendSticker(msg.chat.id, 'CAADAgADBwADlNpLF2eKTjCI8ksIAg');
       } else {
         clearInterval(stickerer);
