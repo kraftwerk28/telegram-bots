@@ -143,13 +143,16 @@ const playDickGame = (user_id, chat_id, fname, file) => {
     t[i].played = true;
     const delta = getRandomLength();
     t[i].dickLength += delta;
-    if (t[i].dickLength <= 0) 
-    t[i].dickLength = 0;
-    bot.sendMessage(chat_id, fname +
-      (delta < 0 ? ', твій песюн скоротився на ' : ', твій песюн виріс на ') +
-      delta +
-      ' см. Тепер його довжина: ' +
-      t[i].dickLength);
+    if (t[i].dickLength <= 0) {
+      t[i].dickLength = 0;
+      bot.sendMessage(chat_id, fname + ', в тебе немає песюна');
+    } else {
+      bot.sendMessage(chat_id, fname +
+        (delta < 0 ? ', твій песюн скоротився на ' : ', твій песюн виріс на ') +
+        delta +
+        ' см. Тепер його довжина: ' +
+        t[i].dickLength);
+    }
   }
   fs.writeFileSync(file, JSON.stringify(t));
 };
