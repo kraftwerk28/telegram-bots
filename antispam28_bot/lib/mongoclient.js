@@ -1,23 +1,31 @@
 const MongoClient = require('mongodb');
 const URI = 'mongodb://localhost:27017';
-const dbName = 'admin';//'antispam28_bot';
+const DB_NAME = 'admin';//'antispam28_bot';
+const LOGGER_LEVEL = 'error';
+const CONNECTION_CONFIG = {
+  useNewUrlParser: true,
+  loggerLevel: LOGGER_LEVEL
+}
 
-
-function interact(collectionName, callback) {
-  MongoClient.connect(URI, { useNewUrlParser: true }, (err, client) => {
-    if (err)
-      throw err;
-
-    const db = client.db(dbName);
-    const collection = db.collection(collectionName);
-
-    callback(collection);
-  });
+// callback shoud return Promise !!!
+async function interact(collectionName, callback) {
+  return await MongoClient.connect(URI, CONNECTION_CONFIG)
+    .then((client) => {
+      const db = client.db(DB_NAME);
+      const collection = db.collection(collectionName);
+      return callback(collection).then((val) => {
+        client.close();
+        return val;
+      });
+    })
+    .catch((reason) => {
+      throw reason;
+    });
 };
 
-const newGroup = (chat) => {
-  interact('test', (collection) => {
-    collection.updateOne(
+async function newGroup(chat) {
+  await interact('test', async (collection) => {
+    await collection.updateOne(
       { 'groups': { '$exists': true } },
       {
         '$push': { 'groups': chat }
@@ -25,17 +33,17 @@ const newGroup = (chat) => {
   });
 };
 
-const removeGroup = (chat) => {
-  interact('test', (collection) => {
-    collection.updateOne(
+function removeGroup(chat) {
+  interact('test', async (collection) => {
+    await collection.updateOne(
       { 'groups': { '$exists': true } },
       {
         '$pull': { 'groups': { 'id': chat['id'] } }
-      }
-    );
-  })
+      });
+  });
 };
 
 module.exports = {
+  interact,
   newGroup, removeGroup,
 }
