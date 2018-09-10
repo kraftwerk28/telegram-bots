@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb');
 const URI = 'mongodb://localhost:27017';
 const DB_NAME = 'admin';//'antispam28_bot';
+const COLLECTION_NAME = 'test';
 const LOGGER_LEVEL = 'error';
 const CONNECTION_CONFIG = {
   useNewUrlParser: true,
@@ -24,7 +25,7 @@ async function interact(collectionName, callback) {
 };
 
 async function newGroup(chat) {
-  await interact('test', async (collection) => {
+  await interact(COLLECTION_NAME, async (collection) => {
     await collection.updateOne(
       { 'groups': { '$exists': true } },
       {
@@ -33,8 +34,8 @@ async function newGroup(chat) {
   });
 };
 
-function removeGroup(chat) {
-  interact('test', async (collection) => {
+async function removeGroup(chat) {
+  await interact(COLLECTION_NAME, async (collection) => {
     await collection.updateOne(
       { 'groups': { '$exists': true } },
       {
@@ -43,7 +44,13 @@ function removeGroup(chat) {
   });
 };
 
+async function getGroup(chat) {
+  return await interact(COLLECTION_NAME, async (coll) =>
+    await coll.findOne({ 'groups': { '$exists': true } })
+      .then(g => g['groups'].find(g => g.id === chat.id)));
+}
+
 module.exports = {
   interact,
-  newGroup, removeGroup,
+  newGroup, removeGroup, getGroup,
 }

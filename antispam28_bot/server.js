@@ -39,7 +39,7 @@ const messageHandler = async (msg) => {
       const group = msg['chat'];
 
       group['observeTimeout'] = config['defaultTimeout'];
-      group['observingUsers'] = [];
+      group['shouldDeleteJoins'] = true;
       group['banned'] = [];
       group['iAmAdmin'] = await bot.isAdmin(msg.chat.id);
 
@@ -52,16 +52,11 @@ const messageHandler = async (msg) => {
 
     }
 
+    const group = await db.getGroup(msg.chat);
     // user joined group
     const joined = newMembers.filter((mem) => mem.id !== botID);
     let observerTimeout =
-      await db.interact(COLLECTION_NAME, async (cl) =>
-        await cl.findOne({ 'groups': { '$exists': true } })
-          .then((gr) => {
-            const group = gr.groups.find((g) => g.id === msg.chat.id);
-            return group['observeTimeout'];
-          })
-      );
+      await group['observeTimeout'];
 
     // start observing each user
     joined.forEach((user) => {
@@ -81,10 +76,17 @@ const messageHandler = async (msg) => {
 
     });
 
+    const { shouldDeleteJoins } = group;
+
+    if (shouldDeleteJoins) {
+      bot.deleteMessage(msg.chat.id, msg.message_id);
+    }
+
   }
+
   if (leftMember) {
     if (leftMember.id === botID) {
-      db.removeGroup(msg['chat']);
+      db.removeGroup(msg.chat);
     }
   }
 };
@@ -194,6 +196,32 @@ bot.onText(/\/recover(.*) @(\w+)/, async (msg, match) => {
   bot.unbanChatMember(msg.chat.id, userId);
 });
 
+bot.onText(/\/toggle_deleting_joins/, (msg) => {
+  db.interact(COLLECTION_NAME, async (coll) => {
+    const { shouldDeleteJoins } = await db.getGroup(msg.chat);
+    coll.updateOne({ 'groups': { '$exists': true }, 'groups.id': msg.chat.id },
+      { '$set': { 'groups.$.shouldDeleteJoins': !shouldDeleteJoins } })
+    return !shouldDeleteJoins;
+  })
+    .then((val) => {
+      bot.sendMessage(msg.chat.id,
+        val ? '\'User joined\' messages now will be deleted every time' :
+          '\'User joined\' messages now will not be deleted');
+    })
+});
+
 bot.onText(/\/get_banned/, async (msg) => {
+  let banned = await db.interact(COLLECTION_NAME, async (col) =>
+    await coll.findOne({ 'groups': { '$exists': true } })
+      .then(obj => obj.groups.find(g => g.id === msg.chat.id).banned)
+  )
+
+  if (banned)
+    banned = banned.reduce((prev, curr, i) =>
+      prev +
+      `${i + 1}. ${user['first_name']}${user['username'] ? (' (' + user['username'] + ')') : ''}.\n`,
+      '');
+
+  bot.sendMessage(msg.chat.id, banned ? `List of banned users:\n\n${banned}` : 'No banned users here :D');
 
 });
