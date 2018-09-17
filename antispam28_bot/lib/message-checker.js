@@ -8,7 +8,7 @@ module.exports = function bad(msg) {
     (
       msg.entities.some((e) => e.type === 'text_link') ||
       msg.entities.some((e) => e.type === 'url' &&
-        /https:\/\/t\.me\//.test(msg.text))
+        /t\.me\//.test(msg.text))
     ) &&
     badChecker.test(msg.text)
   );
