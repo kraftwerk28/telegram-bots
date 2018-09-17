@@ -1,6 +1,6 @@
 'use strict';
 
-const badChecker = /(vip|вип|btc|bitcoin|биткоин|порно|cp|канал|gastro)/i;
+const badChecker = /(vip|вип|btc|bitcoin|биткоин|porn|pron|порно|cp|канал|gastro)/i;
 
 module.exports = function bad(msg) {
   return (
