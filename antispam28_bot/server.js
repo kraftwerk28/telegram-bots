@@ -20,7 +20,7 @@ console.log = (...args) => {
 }
 
 const messageHandler = async (msg) => {
-  console.log(msg);
+  // console.log(msg);
   
   if (msg.chat.type !== 'group' && msg.chat.type !== 'supergroup') {
     bot.sendMessage(msg.chat.id,
