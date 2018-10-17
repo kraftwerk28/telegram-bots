@@ -11,12 +11,12 @@ module.exports = function bad(msg) {
   return (
     msg['entities'] &&
     (
-      msg.entities.some((e) => e.type === 'text_link') ||
+      msg.entities.some((e) => e.type === 'text_link' || e.type === 'mention') ||
       msg.entities.some((e) =>
         e.type === 'url' &&
         badUrls.some(u => u.test(msg.text))
       )
-    ) &&
+    ) ||
     badChecker.test(msg.text)
   );
 }

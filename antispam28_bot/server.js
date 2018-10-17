@@ -20,7 +20,8 @@ console.log = (...args) => {
 }
 
 const messageHandler = async (msg) => {
-
+  console.log(msg);
+  
   if (msg.chat.type !== 'group' && msg.chat.type !== 'supergroup') {
     bot.sendMessage(msg.chat.id,
       'I\'m only for groups or supergroups. Write me what you want but that gives no effect :{');
