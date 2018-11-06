@@ -1,6 +1,6 @@
 'use strict';
 
-const badChecker = /(vip|вип|btc|bitcoin|биткоин|porn|pron|порно|cp|канал|gastro)/i;
+const badChecker = /(vip|вип|btc|bitcoin|биткоин|porn|pron|п(ро|ор)н|cp|канал|gastro|гастро|лс|переза[їе]зд)/i;
 const badUrls = [
   /t\.me\//,
   /instagram\.com\//,
