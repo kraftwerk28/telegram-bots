@@ -7,7 +7,7 @@ const TOKEN = fs.readFileSync('./token', 'utf8');
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 const sobko = new RegExp('( |^)(с|c)(0|o|о)бк(0|o|о)( |$)', 'i');
-let now = new Date().getDate() % 2 === 0 ? '13:00 - 19:00' : '9:00 - 15:00';
+let now = new Date().getDate() % 2 === 0 ? '9:00 - 15:00' : '13:00 - 19:00';
 const always = 'Парні числа:  <i>9:00 - 15:00</i>\nНепарні числа:  <i>13:00 - 19:00</i>\n'
 let mId = 0;
 const chats = [];
