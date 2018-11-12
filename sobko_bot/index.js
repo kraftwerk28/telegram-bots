@@ -15,9 +15,9 @@ const chats = [];
 dateEvents.on('date', () => {
   const d = new Date();
   if (d.getDate() % 2 === 0)
-    now = '13:00 - 19:00';
-  else
     now = '9:00 - 15:00';
+  else
+    now = '13:00 - 19:00';
   if (d.getDay() < 1)
     now = 'сьогодні Собко І. І. не працює';
 })
