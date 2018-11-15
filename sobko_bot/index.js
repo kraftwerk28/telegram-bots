@@ -1,23 +1,34 @@
 'use strict';
 
+const inverseSchedule = false;
+
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const dateEvents = require('date-events')();
 const TOKEN = fs.readFileSync('./token', 'utf8');
 const bot = new TelegramBot(TOKEN, { polling: true });
 
+const sheds = [
+  '9:00 - 15:00',
+  '13:00 - 19:00',
+]
+
 const sobko = new RegExp('( |^)(с|c)(0|o|о)бк(0|o|о)( |$)', 'i');
-let now = new Date().getDate() % 2 === 0 ? '9:00 - 15:00' : '13:00 - 19:00';
-const always = 'Парні числа:  <i>13:00 - 19:00</i>\nНепарні числа:  <i>9:00 - 15:00</i>\n'
-let mId = 0;
+let now = new Date().getDate() % 2 === 0 ?
+  (inverseSchedule ? sheds[0] : sheds[1]) :
+  (inverseSchedule ? sheds[1] : sheds[0]);
+const always = inverseSchedule ?
+  'Парні числа:  <i>9:00 - 15:00</i>\nНепарні числа:  <i>13:00 - 19:00</i>\n' :
+  'Парні числа:  <i>13:00 - 19:00</i>\nНепарні числа:  <i>9:00 - 15:00</i>\n';
+
 const chats = [];
 
 dateEvents.on('date', () => {
   const d = new Date();
   if (d.getDate() % 2 === 0)
-    now = '13:00 - 19:00';
+    now = inverseSchedule ? sheds[1] : sheds[0];
   else
-    now = '9:00 - 15:00';
+    now = inverseSchedule ? sheds[0] : sheds[1];
   if (d.getDay() < 1)
     now = 'сьогодні Собко І. І. не працює';
 })
