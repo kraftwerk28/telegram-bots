@@ -2,11 +2,12 @@
 
 const inverseSchedule = false;
 
-const TelegramBot = require('node-telegram-bot-api');
+// const TelegramBot = require('node-telegram-bot-api');
+const TelegramBot = require('telegraf/telegraf');
 const fs = require('fs');
 const dateEvents = require('date-events')();
-const TOKEN = fs.readFileSync('./token', 'utf8');
-const bot = new TelegramBot(TOKEN, { polling: true });
+const TOKEN = fs.readFileSync(__dirname + '/token', 'utf8');
+const bot = new TelegramBot(TOKEN, { username: 'sobko_bot' });
 
 const sheds = [
   '9:00 - 15:00',
@@ -18,8 +19,9 @@ let now = new Date().getDate() % 2 === 0 ?
   (inverseSchedule ? sheds[0] : sheds[1]) :
   (inverseSchedule ? sheds[1] : sheds[0]);
 const always = inverseSchedule ?
-  'Парні числа:  <i>9:00 - 15:00</i>\nНепарні числа:  <i>13:00 - 19:00</i>\n' :
-  'Парні числа:  <i>13:00 - 19:00</i>\nНепарні числа:  <i>9:00 - 15:00</i>\n';
+  `Парні числа:  <i>${sheds[0]}</i>\nНепарні числа:  <i>${sheds[1]}</i>\n` :
+  `Парні числа:  <i>${sheds[1]}</i>\nНепарні числа:  <i>${sheds[0]}</i>\n`
+  ;
 
 const chats = [];
 
@@ -31,30 +33,29 @@ dateEvents.on('date', () => {
     now = inverseSchedule ? sheds[0] : sheds[1];
   if (d.getDay() < 1)
     now = 'сьогодні Собко І. І. не працює';
-})
-
-bot.on('text', msg => {
-  if (sobko.test(msg.text)) {
-    work(msg);
-  }
 });
 
-bot.onText(/\/sobko/, (msg, match) => {
-  work(msg);
+bot.command('sobko', (ctx) => {
+  work(ctx);
 });
 
-const work = msg => {
-  if (!chats.some(val => val.chat_id === msg.chat.id))
-    chats.push({ id: msg.chat.id, mId: null });
+bot.hears(/(?: |^)[сcs][0оo](?:бк|bk)[0оo](?: |$)/i, (ctx) => {
+  work(ctx);
+});
 
-  const index = chats.findIndex(val => val.id === msg.chat.id);
+const work = ctx => {
+  if (!chats.some(val => val.chat_id === ctx.chat.id))
+    chats.push({ id: ctx.chat.id, mId: null });
+
+  const index = chats.findIndex(val => val.id === ctx.chat.id);
   if (chats[index].mId !== null)
-    bot.deleteMessage(chats[index].id, chats[index].mId);
-  bot.sendMessage(
-    msg.chat.id,
+    ctx.deleteMessage(chats[index].mId);
+  ctx.reply(
     `<b>Графік роботи Собко І. І.:</b>\n${always}\nГрафік роботи Собко І. І. на сьогодні:\n<code>${now}</code>\nТелефони реєстратури: <code>204-85-62</code>, <code>204-95-93</code>`,
-    { parse_mode: 'html', reply_to_message_id: msg.message_id }
+    { parse_mode: 'html', reply_to_message_id: ctx.message_id }
   ).then(msg => {
     chats[index].mId = msg.message_id;
   });
 };
+
+bot.startPolling();

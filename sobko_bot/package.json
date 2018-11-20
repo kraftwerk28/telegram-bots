@@ -12,6 +12,6 @@
   "dependencies": {
     "date-events": "^1.0.1",
     "fs": "0.0.1-security",
-    "node-telegram-bot-api": "^0.30.0"
+    "telegraf": "^3.25.0"
   }
 }
