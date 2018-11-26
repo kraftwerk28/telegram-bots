@@ -28,9 +28,9 @@ const chats = [];
 dateEvents.on('date', () => {
   const d = new Date();
   if (d.getDate() % 2 === 0)
-    now = inverseSchedule ? sheds[1] : sheds[0];
-  else
     now = inverseSchedule ? sheds[0] : sheds[1];
+  else
+    now = inverseSchedule ? sheds[1] : sheds[0];
   if (d.getDay() < 1)
     now = 'сьогодні Собко І. І. не працює';
 });
