@@ -149,7 +149,7 @@ const playDickGame = (user_id, chat_id, fname, file) => {
     } else {
       bot.sendMessage(chat_id, fname +
         (delta < 0 ? ', твій песюн скоротився на ' : ', твій песюн виріс на ') +
-        delta +
+        Math.abs(delta) +
         ' см. Тепер його довжина: ' +
         t[i].dickLength);
     }
