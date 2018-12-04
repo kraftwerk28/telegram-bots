@@ -9,6 +9,8 @@ const dateEvents = require('date-events')();
 const TOKEN = fs.readFileSync(__dirname + '/token', 'utf8');
 const bot = new TelegramBot(TOKEN, { username: 'sobko_bot' });
 
+const oPrivet = fs.readFileSync(__dirname + '/assets/oh_hi.mp3');
+
 const sheds = [
   '9:00 - 15:00',
   '13:00 - 19:00',
@@ -41,6 +43,19 @@ bot.command('sobko', (ctx) => {
 
 bot.hears(/(?: |^)[сcs][0оo](?:бк|bk)[0оo](?: |$)/i, (ctx) => {
   work(ctx);
+});
+
+bot.on('new_chat_members', (ctx) => {
+  // ctx.replyWithAudio(ctx.chat.id, oPrivet);
+  ctx.replyWithVoice(
+    { source: oPrivet, filename: 'hi.mp3' },
+    { reply_to_message_id: ctx.message.message_id }
+    );
+});
+
+bot.catch((err) => {
+  console.log(err);
+  process.exit(0);
 });
 
 const work = ctx => {
