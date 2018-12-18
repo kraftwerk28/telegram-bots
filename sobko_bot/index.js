@@ -10,13 +10,13 @@ const TOKEN = fs.readFileSync(__dirname + '/token', 'utf8');
 const bot = new TelegramBot(TOKEN, { username: 'sobko_bot' });
 
 const oPrivet = fs.readFileSync(__dirname + '/assets/oh_hi.mp3');
+const aMozhetTy = fs.readFileSync(__dirname + '/assets/no_u.mp3');
 
 const sheds = [
   '9:00 - 15:00',
   '13:00 - 19:00',
 ]
 
-const sobko = new RegExp('( |^)(с|c)(0|o|о)бк(0|o|о)( |$)', 'i');
 let now = new Date().getDate() % 2 === 0 ?
   (inverseSchedule ? sheds[0] : sheds[1]) :
   (inverseSchedule ? sheds[1] : sheds[0]);
@@ -45,12 +45,18 @@ bot.hears(/(?: |^)[сcs][0оo](?:бк|bk)[0оo](?: |$)/i, (ctx) => {
   work(ctx);
 });
 
+bot.hears(/пидор[^a]/, (ctx) => {
+  ctx.replyWithVoice(
+    { source: aMozhetTy, filename: 'no u.mp3' },
+    { reply_to_message_id: ctx.message.message_id }
+  );
+});
+
 bot.on('new_chat_members', (ctx) => {
-  // ctx.replyWithAudio(ctx.chat.id, oPrivet);
   ctx.replyWithVoice(
     { source: oPrivet, filename: 'hi.mp3' },
     { reply_to_message_id: ctx.message.message_id }
-    );
+  );
 });
 
 bot.catch((err) => {
