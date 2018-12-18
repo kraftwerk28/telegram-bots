@@ -45,7 +45,7 @@ bot.hears(/(?: |^)[сcs][0оo](?:бк|bk)[0оo](?: |$)/i, (ctx) => {
   work(ctx);
 });
 
-bot.hears(/пидор[^a]/, (ctx) => {
+bot.hears(/пидор([^a])|$/, (ctx) => {
   ctx.replyWithVoice(
     { source: aMozhetTy, filename: 'no u.mp3' },
     { reply_to_message_id: ctx.message.message_id }
