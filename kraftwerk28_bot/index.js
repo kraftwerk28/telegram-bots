@@ -4,7 +4,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const fs = require('fs');
 const NodeWebcam = require('node-webcam');
 
-const bot = new TelegramBot('488984070:AAEYSj_e9_QYdeBAVJb0923aY5rvhAAxdq8', { polling: true });
+const bot = new TelegramBot('414704813:AAGDLcBceKFXcXRD_3T9LGPEBNiQwc9QG6M', { polling: true });
 
 const webcamOpts = {
   //Picture related 
@@ -29,7 +29,7 @@ const webcamOpts = {
   verbose: true
 };
 
-const Webcam = NodeWebcam.create(webcamOpts);
+// const Webcam = NodeWebcam.create(webcamOpts);
 
 let id;
 let isFlooding = false;
@@ -38,7 +38,7 @@ let flooder;
 // flood script
 bot.onText(/\/flood@kraftwerk_bot(.*)/, (msg, match) => {
   if (!isFlooding) {
-    console.log(match);
+    // console.log(match);
     if (match[1] === '') {
       bot.sendMessage(id, 'Допишіть слово для флуду');
     } else {
@@ -60,18 +60,23 @@ bot.onText(/\/unflood@kraftwerk_bot/, (msg, match) => {
   clearInterval(flooder);
 });
 
+
 bot.on('message', (msg) => {
-  id = msg.chat.id;
-  bot.sendMessage(id, msg.text);
+  // const id = msg.chat.id;
+  // const from = msg.from; 
+  console.dir(msg);
+  // bot.sendMessage(id, `<code>${msg}</code>`, { parse_mode: 'html' });
 });
 
 bot.onText(/\/snap/, (msg, match) => {
   id = msg.chat.id;
   NodeWebcam.capture('face', webcamOpts, (err, data) => {
-    console.log(data);
+    // console.log(data);
     if (err)
       throw err;
     else
       bot.sendPhoto(id, data);
   });
 });
+
+
