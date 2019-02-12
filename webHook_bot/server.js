@@ -34,7 +34,7 @@ bot.deleteWebHook().then(async () => {
   lastUpdateID = await bot.getUpdates({})
     .then(updates => updates[updates.length - 1].update_id);
 
-  const getUpdateRec = () => {
+  const getUpdateRec = async () => {
     const newUpdate = await bot.getUpdates({ offset: lastUpdateID + 1 });
 
     if (newUpdate.length > 0) {
