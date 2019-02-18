@@ -28,8 +28,7 @@ let now = new Date().getDate() % 2 === 0 ?
   (inverseSchedule ? sheds[1] : sheds[0]);
 const always = inverseSchedule ?
   `Парні числа:  <i>${sheds[0]}</i>\nНепарні числа:  <i>${sheds[1]}</i>\n` :
-  `Парні числа:  <i>${sheds[1]}</i>\nНепарні числа:  <i>${sheds[0]}</i>\n`
-  ;
+  `Парні числа:  <i>${sheds[1]}</i>\nНепарні числа:  <i>${sheds[0]}</i>\n`;
 
 /** @type {Array.<>} */
 const chats = [];
@@ -47,15 +46,6 @@ dateEvents.on('date', () => {
 bot.command('sobko', (ctx) => {
   work(ctx);
 });
-
-// bot.use((ctx, next) => {
-//   if (ctx.message) {
-//     lastMsg.chatId = ctx.chat.id;
-//     lastMsg.messageId = ctx.message.message_id;
-//     console.log(lastMsg);
-//   }
-//   return next();
-// });
 
 bot.hears(/(?: |^)[сcs][0оo](?:бк|bk)[0оo](?: |$)/i, (ctx) => {
   work(ctx);
@@ -112,4 +102,26 @@ const work = ctx => {
   });
 };
 
-bot.startPolling();
+
+function main() {
+  bot.startPolling();
+}
+
+// eating old updates
+(async () => {
+  let lastUpdateID = 0;
+  const getUpdateRec = async () => {
+    const newUpdate =
+      await bot.telegram.getUpdates(undefined, 100, lastUpdateID + 1);
+
+    if (newUpdate.length > 0) {
+      lastUpdateID = newUpdate[newUpdate.length - 1].update_id;
+      console.log('Fetched old updates... ' + lastUpdateID);
+      getUpdateRec();
+    } else {
+      // STARTING
+      main();
+    }
+  };
+  getUpdateRec();
+})();
