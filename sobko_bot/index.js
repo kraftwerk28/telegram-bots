@@ -2,13 +2,13 @@
 
 const inverseSchedule = false;
 
-// const TelegramBot = require('node-telegram-bot-api');
+require('dotenv').config()
 const TelegramBot = require('telegraf/telegraf');
 const fs = require('fs');
 const dateEvents = require('date-events')();
 
-const TOKEN = fs.readFileSync(__dirname + '/token', 'utf8');
-const bot = new TelegramBot(TOKEN, { username: 'sobko_bot' });
+const { TOKEN, USERNAME } = process.env
+const bot = new TelegramBot(TOKEN, { username: USERNAME });
 
 const oPrivet = fs.readFileSync(__dirname + '/assets/oh_hi.mp3');
 const aMozhetTy = fs.readFileSync(__dirname + '/assets/no_u.mp3');
@@ -18,17 +18,17 @@ const hostel8chatId = -1001086783945;
 const LSChatID = 343097987;
 const lastMsg = { chatId: null, messageId: null };
 
-const sheds = [
-  '9:00 - 15:00',
-  '13:00 - 19:00',
-];
+const sheds = {
+  even: '13:00 - 19:00',
+  odd: '09:00 - 15:00'
+};
 
 let now = new Date().getDate() % 2 === 0 ?
-  (inverseSchedule ? sheds[0] : sheds[1]) :
-  (inverseSchedule ? sheds[1] : sheds[0]);
-const always = inverseSchedule ?
-  `Парні числа:  <i>${sheds[0]}</i>\nНепарні числа:  <i>${sheds[1]}</i>\n` :
-  `Парні числа:  <i>${sheds[1]}</i>\nНепарні числа:  <i>${sheds[0]}</i>\n`;
+  (inverseSchedule ? sheds.even : sheds.odd) :
+  (inverseSchedule ? sheds.odd : sheds.even);
+const always = inverseSchedule
+  ? `Парні числа:  <i>${sheds.even}</i>\nНепарні числа:  <i>${sheds.odd}</i>\n`
+  : `Парні числа:  <i>${sheds.odd}</i>\nНепарні числа:  <i>${sheds.even}</i>\n`;
 
 /** @type {Array.<>} */
 const chats = [];
@@ -36,9 +36,9 @@ const chats = [];
 dateEvents.on('date', () => {
   const d = new Date();
   if (d.getDate() % 2 === 0)
-    now = inverseSchedule ? sheds[0] : sheds[1];
+    now = inverseSchedule ? sheds.even : sheds.odd;
   else
-    now = inverseSchedule ? sheds[1] : sheds[0];
+    now = inverseSchedule ? sheds.odd : sheds.even;
   if (d.getDay() < 1)
     now = 'сьогодні Собко І. І. не працює';
 });
