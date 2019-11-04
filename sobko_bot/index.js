@@ -4,19 +4,21 @@ const inverseSchedule = false;
 
 require('dotenv').config()
 const TelegramBot = require('telegraf/telegraf');
+const { resolve } = require('path')
 const fs = require('fs');
 const dateEvents = require('date-events')();
 
 const { TOKEN, USERNAME } = process.env
 const bot = new TelegramBot(TOKEN, { username: USERNAME });
 
-const oPrivet = fs.readFileSync(__dirname + '/assets/oh_hi.mp3');
-const aMozhetTy = fs.readFileSync(__dirname + '/assets/no_u.mp3');
+const oPrivet = fs.readFileSync(resolve('./assets/01.mp3'));
+const aMozhetTy = fs.readFileSync(resolve('./assets/02.mp3'));
+const valakas = fs.readFileSync(resolve('./assets/03.mp3'))
 
-const printer8id = 257;
-const hostel8chatId = -1001086783945;
-const LSChatID = 343097987;
-const lastMsg = { chatId: null, messageId: null };
+// const printer8id = 257;
+// const hostel8chatId = -1001086783945;
+// const LSChatID = 343097987;
+// const lastMsg = { chatId: null, messageId: null };
 
 const sheds = {
   even: '13:00 - 19:00',
@@ -58,17 +60,24 @@ bot.hears(/п[иіе]д[оа]?р(?:ас)?$/i, (ctx) => {
   );
 });
 
-bot.hears(/печат/i, (ctx) => {
-  if (+ctx.chat.id === LSChatID) {
-    // if (+ctx.chat.id === hostel8chatId) {
-    if (!chats.some(val => val.chat_id === ctx.chat.id))
-      chats.push({ id: ctx.chat.id, mId: null });
-
-    const index = chats.findIndex(val => val.id === ctx.chat.id);
-    bot.telegram.forwardMessage(ctx.chat.id, hostel8chatId, printer8id)
-      .then(msg => { chats[index].mId = msg.message_id; });
-  }
+bot.hears(/д[о0][лв][б6][о0]([её]|й[о0])[б6]/i, (ctx) => {
+  ctx.replyWithVoice(
+    { source: valakas, filename: 'no u.mp3' },
+    { reply_to_message_id: ctx.message.message_id }
+  );
 });
+
+// bot.hears(/печат/i, (ctx) => {
+//   if (+ctx.chat.id === LSChatID) {
+//     // if (+ctx.chat.id === hostel8chatId) {
+//     if (!chats.some(val => val.chat_id === ctx.chat.id))
+//       chats.push({ id: ctx.chat.id, mId: null });
+
+//     const index = chats.findIndex(val => val.id === ctx.chat.id);
+//     bot.telegram.forwardMessage(ctx.chat.id, hostel8chatId, printer8id)
+//       .then(msg => { chats[index].mId = msg.message_id; });
+//   }
+// });
 
 bot.on('new_chat_members', (ctx) => {
   ctx.replyWithVoice(
@@ -95,7 +104,13 @@ const work = ctx => {
     ctx.deleteMessage(chats[index].mId);
   }
   ctx.reply(
-    `<b>Графік роботи Собко І. І.:</b>\n${always}\nГрафік роботи Собко І. І. на сьогодні:\n<code>${now}</code>\nТелефони реєстратури: <code>204-85-62</code>, <code>204-95-93</code>`,
+    [
+      '<b>Графік роботи Собко І. І.:</b>',
+      always,
+      'Графік роботи Собко І. І. на сьогодні:',
+      `<code>${now}</code>`,
+      'Телефони реєстратури: <code>204-85-62</code>, <code>204-95-93</code>'
+    ].join('\n'),
     { parse_mode: 'html', reply_to_message_id: ctx.message_id }
   ).then(msg => {
     chats[index].mId = msg.message_id;
